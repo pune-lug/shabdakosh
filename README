@@ -19,3 +19,12 @@ Optional
 
 2. Django: If you want to use the webapp, shabdakosh, you will need
    django. scripts/update_words.py should be used in this case.
+
+
+
+Useful links:
+
+http://dumps.wikimedia.org/backup-index.html (choose approriate language)
+
+For marathi words:
+http://code.google.com/p/tukaram/

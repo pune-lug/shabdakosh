@@ -4,6 +4,8 @@ import os
 import sys
 import codecs
 import re
+import argparse
+
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
@@ -45,13 +47,14 @@ digits = ''.join([unichr(x) for x in range(0x966, 0x970)])
 
 f = codecs.open(sys.argv[2], encoding='utf-8')
 
-def get_words(line=None):
+def get_words(data=None):
     retval = []
-    for w in re.split(r'[%s]' % other_chrs, line, re.U):
-        a = re.search(r'[%s]+' % (devnagari_chrs), w, re.U)
-        if a: 
-            retval.append(a.group())
-    return retval
+    for line in data.split('\n'):
+        for w in re.split(r'[%s]' % other_chrs, line, re.U):
+            a = re.search(r'[%s]+' % (devnagari_chrs), w, re.U)
+            if a: 
+                retval.append(a.group())
+        return retval
 
 
 def store_db(word):
@@ -73,7 +76,8 @@ def store_db(word):
 
 skip = 0
 i = skip
-tot_words = 0
+old_words = 0
+new_words = 0
 for l in f:
     if skip:
         skip -= 1
@@ -82,8 +86,13 @@ for l in f:
     words = get_words(l)
     for w in words:
         try:
-            tot_words += store_db(w)
+            if store_db(w):
+                new_words += 1
+            else:
+                old_words += 1
         except Exception as e:
             pass
     i += 1
-print 'New words: %d' % tot_words
+
+print 'Old words: %d' % old_words
+print 'New words: %d' % new_words
