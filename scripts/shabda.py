@@ -48,7 +48,7 @@ f = codecs.open(sys.argv[2], encoding='utf-8')
 def get_words(line=None):
     retval = []
     for w in re.split(r'[%s]' % other_chrs, line, re.U):
-        a = re.search(r'[%s][%s]*' % (devnagari_chrs, devnagari_chrs), w, re.U)
+        a = re.search(r'[%s]+' % (devnagari_chrs), w, re.U)
         if a: 
             retval.append(a.group())
     return retval
