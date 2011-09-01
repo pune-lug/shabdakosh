@@ -1,4 +1,5 @@
 #!/opt/local/bin/python
+
 import os
 import sys
 import codecs
@@ -14,9 +15,9 @@ DATABASE_NAME = 'shabdakosh'
 DATABASE_HOST = 'localhost'
 DATABASE_USER = 'postgres'
 DATABASE_PASS = None
+DATABASE_PORT = 5432
 
-
-engine = create_engine('postgres://%s:%s@%s/%s' % (DATABASE_USER, DATABASE_PASS, DATABASE_HOST, DATABASE_NAME), echo=False)
+engine = create_engine('postgres://%s:%s@%s:%d/%s' % (DATABASE_USER, DATABASE_PASS, DATABASE_HOST, DATABASE_PORT, DATABASE_NAME), echo=False)
 
 table_name = sys.argv[1]
 Base = declarative_base()
