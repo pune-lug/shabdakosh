@@ -41,7 +41,17 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-devnagari_chrs = ''.join({unichr(x) for x in range(0x900, 0x980)}-{unichr(x) for x in range(0x964,0x970)})
+devnagari_start_chrs =  ''.join(
+    {unichr(x) for x in range(0x904, 0x93a) + range(0x958, 0x962)} | \
+    {unichr(0x950)} 
+)
+
+devnagari_chrs = ''.join(
+    {unichr(x) for x in range(0x900, 0x980)} - \
+    {unichr(x) for x in range(0x964, 0x970)}
+)
+
+
 other_chrs = ':,./<>?;"[]{}|-=_+!@#$%^&*()`~\'\\'
 digits = ''.join([unichr(x) for x in range(0x966, 0x970)])
 
@@ -51,7 +61,7 @@ def get_words(data=None):
     retval = []
     for line in data.split('\n'):
         for w in re.split(r'[%s]' % other_chrs, line, re.U):
-            a = re.search(r'[%s]+' % (devnagari_chrs), w, re.U)
+            a = re.search(r'[%s][%s]*' % (devnagari_start_chrs, devnagari_chrs), w, re.U)
             if a: 
                 retval.append(a.group())
         return retval
