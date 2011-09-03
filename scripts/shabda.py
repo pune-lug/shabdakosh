@@ -12,16 +12,24 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 
+def parse_opts(data):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--db-host', default='localhost')
+    parser.add_argument('--db-name', default='shabdakosh')
+    parser.add_argument('--db-user', default='postgres')
+    parser.add_argument('--db-passwd', default=None)
+    parser.add_argument('--db-port', default=5432)
+    parser.add_argument('--db-type', default='postgres')
+    parser.add_argument('--table-name', default='marathi_devnagari')
+    parser.add_argument('--input-file')
+    return parser.parse_args(data)
 
-DATABASE_NAME = 'shabdakosh'
-DATABASE_HOST = 'localhost'
-DATABASE_USER = 'postgres'
-DATABASE_PASS = None
-DATABASE_PORT = 5432
 
-engine = create_engine('postgres://%s:%s@%s:%d/%s' % (DATABASE_USER, DATABASE_PASS, DATABASE_HOST, DATABASE_PORT, DATABASE_NAME), echo=False)
+args = parse_opts(sys.argv[1:])
 
-table_name = sys.argv[1]
+engine = create_engine('%s://%s:%s@%s:%d/%s' % (args.db_type, args.db_user , args.db_passwd, args.db_host, args.db_port, args.db_name), echo=False)
+
+table_name = args.table_name
 Base = declarative_base()
 
 class Sangraha(Base):
@@ -55,7 +63,7 @@ devnagari_chrs = ''.join(
 other_chrs = ':,./<>?;"[]{}|-=_+!@#$%^&*()`~\'\\'
 digits = ''.join([unichr(x) for x in range(0x966, 0x970)])
 
-f = codecs.open(sys.argv[2], encoding='utf-8')
+f = codecs.open(args.input_file, encoding='utf-8')
 
 def get_words(data=None):
     retval = []
