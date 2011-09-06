@@ -4,15 +4,15 @@ Currently starting with Devanagari Script, Marathi language.
 
 
 Requirement
------------
+===========
 
 Mandatory
-=========
+---------
 Python 2.7.x. You may be able to get it working on 2.6.x.
 (For 3.x, few modification may be required.)
 
 Optional
-========
+--------
 
 1. SQLAlchemy: If you use scripts/shabda.py, you will need SQLAlchemy.
    Python 3.x may be supported on this.
@@ -21,12 +21,16 @@ Optional
    django. scripts/update_words.py should be used in this case.
 
 
-Creating Postgres DB
+Creating DB
 ====================
+
+postgres
+--------
 
 CREATE DATABASE shabdakosh WITH ENCODING 'UTF8' TEMPLATE template0;
 
-Useful links:
+Useful links
+============
 
 http://dumps.wikimedia.org/backup-index.html (choose approriate language)
 
