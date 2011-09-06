@@ -21,6 +21,10 @@ Optional
    django. scripts/update_words.py should be used in this case.
 
 
+Creating Postgres DB
+====================
+
+CREATE DATABASE shabdakosh WITH ENCODING 'UTF8' TEMPLATE template0;
 
 Useful links:
 
