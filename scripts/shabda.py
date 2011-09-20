@@ -5,12 +5,12 @@ import sys
 import codecs
 import re
 import argparse
+import datetime
 
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
 
 def parse_opts(data):
     parser = argparse.ArgumentParser()
@@ -59,11 +59,13 @@ devnagari_chrs = ''.join(
     {unichr(x) for x in range(0x964, 0x970)}
 )
 
-
 other_chrs = ':,./<>?;"[]{}|-=_+!@#$%^&*()`~\'\\'
 digits = ''.join([unichr(x) for x in range(0x966, 0x970)])
 
-f = codecs.open(args.input_file, encoding='utf-8')
+
+
+word_dict = {}
+
 
 def get_words(data=None):
     retval = []
@@ -75,42 +77,82 @@ def get_words(data=None):
         return retval
 
 
-def store_db(word):
+def store_db(word, num=1, force_commit=False):
     #session.rollback()
     f = 0
     x = session.query(Sangraha).filter_by(shabda=word).first()
 
     if x:
-        x.kiti_vela += 1 
+        x.kiti_vela += num
         session.add(x)
     else:
-        w = Sangraha(shabda=word.encode('utf-8'), kiti_vela=1)
+        w = Sangraha(shabda=word.encode('utf-8'), kiti_vela=num)
         session.add(w)
         f = 1
-    session.commit()
+    if force_commit:
+        session.commit()
     return f
 
+def store_dict(word):
+    if word in word_dict:
+        word_dict[word] += 1
+    else:
+        word_dict[word] = 1
 
+def store_db_word_dict():
+    for k in word_dict:
+        try:
+            store_db(k, word_dict[k])
+        except:
+            pass
 
 skip = 0
 i = skip
 old_words = 0
 new_words = 0
-for l in f:
-    if skip:
-        skip -= 1
-        print(skip)
-        continue
-    words = get_words(l)
-    for w in words:
-        try:
-            if store_db(w):
-                new_words += 1
-            else:
-                old_words += 1
-        except Exception as e:
-            pass
-    i += 1
 
-print 'Old words: %d' % old_words
-print 'New words: %d' % new_words
+for fname in args.input_file.split(','):
+    try:
+        f = codecs.open(fname, encoding='utf-8')
+    except Exception, e:
+        print e
+        continue
+    try:
+        for l in f:
+            if skip:
+                skip -= 1
+                print(skip)
+                continue
+            words = get_words(l)
+            for w in words:
+                '''
+                try:
+                    if store_db(w):
+                        new_words += 1
+                    else:
+                        old_words += 1
+                except Exception as e:
+                    pass
+                '''
+                #'''
+                try:
+                    store_dict(w)
+                except Exception, e:
+                    print e
+                    pass
+                #'''
+            i += 1
+            if not i % 10000:
+                print i
+    except Exception, e:
+        pass
+
+print 'Words: ', len(word_dict.keys())
+print 'Total count: ', sum(word_dict.values())
+n1 = datetime.datetime.now()
+store_db_word_dict()
+n2 = datetime.datetime.now()
+n3 = n2 - n1
+print n3.seconds
+##print 'Old words: %d' % old_words
+##print 'New words: %d' % new_words
