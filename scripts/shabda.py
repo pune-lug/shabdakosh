@@ -42,7 +42,7 @@ class Sangraha(Base):
         if 'kiti_vela' in kargs: self.kiti_vela = kargs['kiti_vela']
         
     def __repr__(self):
-        return 'Name: ' % (self.shabda)
+        return 'Name: %s' % (self.shabda.encode('utf-8'))
 
 
 Base.metadata.create_all(engine) 
