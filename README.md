@@ -6,19 +6,20 @@ Currently starting with Devanagari Script, Marathi language.
 Requirement
 ===========
 
-Mandatory
----------
-Python 2.7.x. You may be able to get it working on 2.6.x.
-(For 3.x, few modification may be required.)
+Python 3.15.
 
-Optional
---------
+Install the dependencies into a virtualenv:
 
-1. SQLAlchemy: If you use scripts/shabda.py, you will need SQLAlchemy.
-   Python 3.x may be supported on this.
+    python3.15 -m venv venv
+    . venv/bin/activate
+    pip install -r requirements.txt
 
-2. Django: If you want to use the webapp, shabdakosh, you will need
-   django. scripts/update_words.py should be used in this case.
+The requirements are:
+
+- Django 6.1 (the webapp, shabdakosh). scripts/update_words.py uses it too.
+- django-tastypie (the read-only API under /api/).
+- SQLAlchemy (only needed for scripts/shabda.py).
+- psycopg2-binary (PostgreSQL driver).
 
 
 Creating DB
@@ -28,6 +29,12 @@ postgres
 --------
 
 CREATE DATABASE shabdakosh WITH ENCODING 'UTF8' TEMPLATE template0;
+
+Then fill in the DATABASES settings in shabdakosh/settings.py and run:
+
+    python -m shabdakosh.manage migrate --run-syncdb
+
+(Run from the repository root.)
 
 Useful links
 ============

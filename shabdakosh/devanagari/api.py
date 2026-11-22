@@ -1,6 +1,6 @@
 from tastypie.resources import ModelResource
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
-from devanagari.models import shabda
+from shabdakosh.devanagari.models import shabda
 
 
 class devanagari_shabda_resource(ModelResource):
@@ -12,4 +12,3 @@ class devanagari_shabda_resource(ModelResource):
         filtering = {
             'shabda': ALL,
         }
-
