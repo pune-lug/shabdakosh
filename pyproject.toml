@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shabdakosh"
+version = "0.1.0"
+description = "Collect words and generate wordlists for Indian languages (Devanagari / Marathi)."
+readme = "README.md"
+requires-python = ">=3.15"
+dependencies = [
+    "Django>=6.1,<6.2",
+    "django-tastypie>=0.15.1",
+    "psycopg2-binary>=2.9.13",
+]
+
+[project.optional-dependencies]
+# Needed only by scripts/shabda.py.
+scripts = [
+    "SQLAlchemy>=2.1.9",
+]
+
+[tool.setuptools.packages.find]
+include = ["shabdakosh", "shabdakosh.*"]

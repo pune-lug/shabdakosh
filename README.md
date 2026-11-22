@@ -8,11 +8,12 @@ Requirement
 
 Python 3.15.
 
-Install the dependencies into a virtualenv:
+Install the project and its dependencies into a virtualenv:
 
     python3.15 -m venv venv
     . venv/bin/activate
-    pip install -r requirements.txt
+    pip install .            # webapp dependencies
+    pip install ".[scripts]" # also SQLAlchemy, for scripts/shabda.py
 
 The requirements are:
 

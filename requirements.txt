@@ -1,4 +1,0 @@
-Django>=6.1,<6.2
-django-tastypie==0.15.1
-SQLAlchemy==2.1.9
-psycopg2-binary==2.9.13
